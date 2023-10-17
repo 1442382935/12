@@ -1,0 +1,84 @@
+1. 解决复杂问题：深度学习提供了一种强大的工具来解决复杂的问题，如图像识别、语音识别、自然语言处理等。通过将深度学习应用于软件开发中，可以更好地解决这些复杂问题，提高软件的智能化水平。
+
+2. 自动化和优化：深度学习可以通过自动化和优化算法来改进软件开发的流程和效率。例如，可以使用深度学习模型来自动生成代码、自动化测试和调试、优化算法性能等，从而减少开发人员的工作量，提高软件开发的效率和质量。
+
+3. 数据驱动的决策：深度学习可以通过对大量数据的学习和分析，提供数据驱动的决策支持。在软件开发中，可以利用深度学习模型对用户行为、系统性能等进行分析，从而做出更准确、更智能的决策，提升用户体验和系统效能。
+
+4. 创新和竞争优势：将深度学习应用于软件开发可以带来创新和竞争优势。深度学习技术的应用可以使软件具备更强大的功能和智能化的特性，从而吸引更多的用户和客户，提升产品的市场竞争力。
+
+5. 跨领域合作：深度学习在软件开发中的应用需要跨领域的合作，涉及到计算机科学、数学、统计学等多个学科的知识。通过与深度学习领域的专家和研究人员合作，软件开发人员可以获得更多的知识和经验，提高自己的技术水平。
+
+6.理解深度学习的基础知识： 通过课程， 你可以了解深度学习的基本原理、数学基础(如线性代数、微积分、概率论等) 以及神经网络的基本结构和工作方式。
+
+7.掌握深度学习的重要技术：课程通常会涵盖一些重要的深度学习技术， 例如前馈神经网络、反向传播算法、优化方法 (如梯度下降法) 、卷积神经网络 (CNN) 等。这些技术在图像和语音处理等许多领域都有广泛应用。
+
+总的来说，软件开发与深度学习的结合可以带来许多收获，包括解决复杂问题、自动化和优化、数据驱动的决策、创新和竞争优势，以及跨领域合作等。这些收获将推动软件开发领域的发展，带来更智能、高效和创新的软件产品。
+import torch
+import torch.nn as nn
+
+class Net(nn.Module):
+    def __init__(self,input_size,hidden_size,output_size) -> None:
+        super().__init__()
+        self.fc1 = nn.Linear(input_size,hidden_size)
+        self.sigmoid = torch.nn.Sigmoid() #torch.sigmoid
+        self.fc2 = nn.Linear(hidden_size,output_size) #
+
+    def forward(self,x,w1,w2):
+        self.fc1.weight.data = w1
+        self.fc1.bias.data = torch.Tensor([0])
+        h = self.fc1(x)
+        h = self.sigmoid(h)
+
+        self.fc2.weight.data = w2
+        self.fc2.bias.data = torch.Tensor([0])
+        o = self.fc2(h)
+        o = self.sigmoid(o)
+        return o
+
+if __name__=='__main__':
+    x = torch.tensor([0.5, 0.3])
+    w1 = torch.tensor([[0.2, 0.5], [-0.4, 0.6]])
+    w2 = torch.tensor([[0.1, -0.3], [-0.5, 0.8]])
+
+    net = Net(2,2,2)
+    output = net(x,w1,w2)
+    # net.forward(x,w1,w2)
+    print('最终的输出值为：',output)
+import torch
+import torch.nn as nn
+class Net(nn.Module):
+    def __init__(self,input_size,hidden_size,output_size) -> None:
+        super().__init__()
+        self.fc1 = nn.Linear(input_size,hidden_size)
+        self.sigmoid = torch.nn.Sigmoid()
+        self.fc2 = nn.Linear(hidden_size,output_size)
+    def forward(self,x,w1,w2):
+        self.fc1.weight.data = w1
+        self.fc1.bias.data = torch.Tensor([0])
+        out = self.fc1(x)
+        out = self.sigmoid(out)
+
+        self.fc2.weight.data=w2
+        self.fc2.bias.data = torch.Tensor([0])
+        output = self.fc2(out)
+        output=self.sigmoid(output)
+        return output
+
+if __name__=='__main__':
+    x = torch.tensor([0.5, 0.3])
+    y = torch.tensor([0.23, 0.07])
+    w1 = torch.tensor([[0.2, 0.5], [-0.4, 0.6]])
+    w2 = torch.tensor([[0.1, -0.3], [-0.5, 0.8]])
+    net = Net(2,2,2)
+
+    loss = nn.MSELoss()  #定义损失函数
+    optimizer = torch.optim.SGD(params=net.parameters(),lr=1e-2) #定义优化器
+
+    for i in range(1000):
+        output = net(x,w1,w2)
+        loss_fn = loss(output,y)
+        optimizer.zero_grad()
+        loss_fn.backward()
+        optimizer.step()
+        print('损失函数的变化情况',i,loss_fn)
+    print(output)
